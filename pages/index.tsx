@@ -7,7 +7,7 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">thirdweb</a>!
+          Welcome to <a href="http://thirdweb.com/">thirdweb</a>!
         </h1>
 
         <p className={styles.description}>
