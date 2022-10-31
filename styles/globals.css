@@ -15,12 +15,10 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: #e7e8e8;
-    background: #0f1318;
-  }
+html {
+  color-scheme: dark;
+}
+body {
+  color: #e7e8e8;
+  background: #0f1318;
 }
