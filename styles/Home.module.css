@@ -1,5 +1,6 @@
 .container {
   padding: 0 2rem;
+  background-image: url("../public/images/background-image.png");
 }
 
 .main {
