@@ -1,0 +1,43 @@
+.container {
+  background-image: url("../public/images/background-image.png");
+  background-repeat: no-repeat;
+}
+
+.main {
+  min-height: 100vh;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.description {
+  margin-bottom: 20px;
+}
+.kyc {
+  display: flex;
+  align-items: center;
+  max-width: 60%;
+  margin: auto;
+  height: 70vh;
+}
+
+.kycSteps {
+  text-align: center;
+  background-color: rgba(196, 173, 246, 0.25);
+  width: 100%;
+  padding: 40px;
+}
+
+.kycStepData {
+  display: flex;
+  margin-top: 25px;
+  justify-content: center;
+  align-items: center;
+}
+.footer {
+  background-color: #320667;
+  padding: 40px;
+  height: 30vh;
+}
