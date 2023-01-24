@@ -21,7 +21,7 @@ export const linkButton = css({
 
 export const primaryButton = css({
   background: colors.Zeb_Solid_Dark,
-  borderRadius: utils.remConverter(8),
+  borderRadius: utils.remConverter(15),
   boxShadow: "none",
   border: "none",
   outline: "none",
@@ -52,7 +52,7 @@ export const secondaryButton = css({
   padding: `${utils.remConverter(8)} ${utils.remConverter(16)}`,
   background: colors.Zeb_Solid_White,
   border: `1px solid ${colors.Zeb_Soild_LightGrey}`,
-  borderRadius: "8px",
+  borderRadius: "15px",
   ...typography.C2_16,
   color: colors.Zeb_Solid_Dark,
   "&.small": {
