@@ -50,6 +50,7 @@ const colors = {
   Zeb_Solid_Dark: "rgba(56, 56, 56, 1)",
   Zeb_Solid_Mustard: "rgba(231, 199, 85, 1)",
   Zeb_Solid_Midnight: "rgba(68, 68, 68, 1)",
+  Zeb_Border_Grey: "rgba(176,176,176,1)",
 };
 
 export default colors;
