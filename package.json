@@ -19,13 +19,16 @@
     "@web3uikit/icons": "^0.2.40",
     "@web3uikit/web3": "^0.2.2",
     "antd": "^5.1.6",
+    "dotenv": "^16.0.3",
     "emotion": "^11.0.0",
     "ethers": "^5.7.2",
     "formik": "^2.2.9",
     "next": "^13",
+    "nft.storage": "^7.0.0",
     "react": "^18.2",
     "react-dom": "^18.2",
-    "react-hot-toast": "^2.4.0"
+    "react-hot-toast": "^2.4.0",
+    "react-toastify": "^9.1.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",

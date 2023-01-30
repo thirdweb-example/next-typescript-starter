@@ -1,25 +1,60 @@
 /** @jsxImportSource @emotion/react */
 import { Badge, Tab, Table, TabList, Upload } from "@web3uikit/core";
 import { Drawer, Form, Input, DatePicker } from "antd";
-
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { colors, mixins, typography } from "../../../styles1";
 import Button from "../../shared/Button";
+import { NFTStorage, File } from "nft.storage";
 import * as styles from "./styles";
+import { NFT_TOKEN } from "../../../constants/constants";
 
 const UserDocuments = () => {
+  const [name,setName] = useState<string>("");
+  const [email,setEmail] = useState<string>("");
+  const [description,setDescription] = useState<string>("");
+  const [type,setType] = useState<string>("");
+  const [category,setCategory] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate,setEndDate] = useState<string>("");
+ 
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [uplodedDocument, setUploadedDocument] = useState<
-    Blob | null | undefined
-  >();
+  const [uplodedDocument, setUploadedDocument] = useState<any>();
   const onFinish = (values: any) => {
     console.log(values);
     console.log("Success:", values);
+    uploadDocToIPFS();
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  const uploadDocToIPFS = async () => { 
+    try {
+      console.log("NFT TOKEN IS:")
+      console.log(NFT_TOKEN)
+      if(NFT_TOKEN) {
+        console.log(NFT_TOKEN)
+        const client = new NFTStorage({
+          token: NFT_TOKEN,
+        });
+        console.log("Hi I am here")
+        console.log(client)
+        const metadata = await client.store({
+          name: name,
+          description: description,
+          image: new File([uplodedDocument], uplodedDocument.name, { type: uplodedDocument.type })
+        });
+        console.log(metadata);
+
+      //upload details to Blockchain
+    }     
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
 
   const normFile = (e: any) => {
     console.log("Upload event:", e);
@@ -205,7 +240,7 @@ const UserDocuments = () => {
             name="Name"
             rules={[{ required: true, message: "Please input your Name!" }]}
           >
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
@@ -219,7 +254,7 @@ const UserDocuments = () => {
               },
             ]}
           >
-            <Input />
+             <Input/>
           </Form.Item>
           <Form.Item name="DateRange" label="Contract Validity Date">
             <DatePicker.RangePicker />
@@ -231,7 +266,7 @@ const UserDocuments = () => {
             <Input />
           </Form.Item>
           <Form.Item name="Description" label="Description">
-            <Input.TextArea rows={4} />
+            <Input.TextArea rows={4} onChange={(e) => setDescription(e.target.value)} />
           </Form.Item>
           <Form.Item name="UploadedFile" label="Dragger">
             <Upload
