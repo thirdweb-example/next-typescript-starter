@@ -20,10 +20,12 @@
     "dotenv": "^16.0.3",
     "emotion": "^11.0.0",
     "ethers": "^5.7.2",
+    "file-to-sha256": "^0.0.1",
     "formik": "^2.2.9",
     "moralis": "^2.12.0",
     "next": "^13",
     "nft.storage": "^7.0.0",
+    "path": "^0.12.7",
     "react": "^18.2",
     "react-dom": "^18.2",
     "react-hot-toast": "^2.4.0",
@@ -35,5 +37,10 @@
     "eslint": "^8.29.0",
     "eslint-config-next": "^13",
     "typescript": "^4.9.4"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }
