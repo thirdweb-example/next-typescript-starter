@@ -7,7 +7,7 @@ export const userDocuments = css({
   borderRadius: "30px",
   height: "85vh",
   boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
-  padding: "25px 45px",
+  padding: "25px 40px",
 });
 
 export const heading = css({

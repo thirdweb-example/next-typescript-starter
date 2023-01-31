@@ -7,7 +7,7 @@ import Header from "../components/Header";
 import SideBar from "../components/SideBar";
 import UserProfile from "../components/UserProfile";
 
-const Profile: NextPage = () => {
+const Verify: NextPage = () => {
   const [openSideDrawer, setOpenSideDrawer] = useState<boolean>(false);
 
     useEffect(()=>{
@@ -31,4 +31,4 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+export default Verify;

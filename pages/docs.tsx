@@ -9,6 +9,8 @@ import UserHome from "../components/UserHome";
 
 const Home: NextPage = () => {
     const [showKycFlow,setShowKycFlow]=useState<boolean>(false);
+  const [openSideDrawer, setOpenSideDrawer] = useState<boolean>(false);
+
     useEffect(()=>{
         //call user api to check if logged in
         //call api for stored document when user is successful
@@ -19,8 +21,8 @@ const Home: NextPage = () => {
        
        
         <div css={{display:"flex"}}>
-        <SideBar />
-        <div css={{width:"95%"}}>
+        <SideBar expand={openSideDrawer} toggleExpand={()=>{setOpenSideDrawer(prev=>!prev)}} selected="docs"/>
+        <div css={{width:openSideDrawer? "90%":"95%",justifyContent:"end", transition:"0.2s all ease-in",marginLeft:"auto"}}>
             <Header />
             <UserHome />
         </div>

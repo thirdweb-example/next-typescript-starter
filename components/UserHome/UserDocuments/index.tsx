@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Badge, Tab, Table, TabList, Upload } from "@web3uikit/core";
-import { Drawer, Form, Input, DatePicker } from "antd";
+import { Drawer, Form, Input, DatePicker, Tabs } from "antd";
 import { toast } from "react-toastify";
 import { useEffect, useState, useContext } from "react";
 import { colors, mixins, typography } from "../../../styles1";
@@ -8,19 +8,15 @@ import Button from "../../shared/Button";
 import { NFTStorage, File } from "nft.storage";
 import * as styles from "./styles";
 import { NFT_TOKEN } from "../../../constants/constants";
-import { blobToSHA256 }  from 'file-to-sha256'
-import { ContractContextType } from '../../../context';
-import { contractContext } from './../Contract'
+import { blobToSHA256 } from "file-to-sha256";
+import { MoreOutlined } from "@ant-design/icons";
+import { ContractContextType } from "../../../context";
+import { contractContext } from "./../Contract";
 
 const UserDocuments = () => {
-  const [name,setName] = useState<string>("");
-  const [email,setEmail] = useState<string>("");
-  const [description,setDescription] = useState<string>("");
-  const [type,setType] = useState<string>("");
-  const [category,setCategory] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate,setEndDate] = useState<string>("");
- 
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [uplodedDocument, setUploadedDocument] = useState<any>();
 
@@ -28,40 +24,49 @@ const UserDocuments = () => {
   const onFinish = (values: any) => {
     console.log(values);
     console.log("Success:", values);
-    uploadDocToIPFS();
+    uploadDocToIPFS(values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  const uploadDocToIPFS = async () => { 
+  const uploadDocToIPFS = async (values: any) => {
     try {
-      console.log("NFT TOKEN IS:")
-      console.log(NFT_TOKEN)
-      if(NFT_TOKEN) {
-        console.log(NFT_TOKEN)
+      console.log("NFT TOKEN IS:");
+      console.log(NFT_TOKEN);
+      if (NFT_TOKEN) {
+        console.log(NFT_TOKEN);
         const client = new NFTStorage({
           token: NFT_TOKEN,
         });
-        console.log("Hi I am here")
-        console.log(client)
+        console.log("Hi I am here");
+        console.log(client);
         const metadata = await client.store({
           name: name,
           description: description,
-          image: new File([uplodedDocument], uplodedDocument.name, { type: uplodedDocument.type })
+          image: new File([uplodedDocument], uplodedDocument.name, {
+            type: uplodedDocument.type,
+          }),
         });
         console.log(metadata);
-        const sha256 = await blobToSHA256(uplodedDocument)
-        const currentTime = new Date()
-        addContract(category, description, name, email, currentTime.toLocaleString(), sha256, "metadata")
-      //upload details to Blockchain
-    }     
+        const sha256 = await blobToSHA256(uplodedDocument);
+        const currentTime = new Date();
+        addContract(
+          values.category,
+          description,
+          name,
+          values.email,
+          currentTime.toLocaleString(),
+          sha256,
+          "metadata"
+        );
+        //upload details to Blockchain
+      }
     } catch (error) {
       console.error(error);
     }
-
-  }
+  };
 
   const normFile = (e: any) => {
     console.log("Upload event:", e);
@@ -89,142 +94,137 @@ const UserDocuments = () => {
           Upload +
         </Button>
       </div>
-
-      <TabList
-        defaultActiveKey={1}
-        onChange={function noRefCheck() {}}
-        tabStyle="bar"
-      >
-        <Tab tabKey={1} tabName={"ALL"}>
-          <Table
-            tableBackgroundColor="#F5F5F5"
-            customTableBorder="border-top:1px"
-            headerBgColor="#FFFFFF"
-            columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
-            header={[
-              "Sr.",
-              "Name",
-              "Total Participants",
-              "Status",
-              "Created On",
-              "Updated On",
-              "Actions",
-            ]}
-            alignCellItems="center"
-            data={[
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-              [
-                <div key={1}>1</div>,
-                <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                10,
-                <Badge state="success" text="SIGNED" key={3} />,
-                "09/02/2021 10:00 PM",
-                "09/02/2021 10:00 PM",
-                <div css={mixins.flexJustifiedCenter} key={4}>
-                  <Button type="link" onClick={() => {}}>
-                    View
-                  </Button>
-                  <Button type="link" onClick={() => {}}>
-                    MORE
-                  </Button>
-                </div>,
-              ],
-            ]}
-            maxPages={3}
-            onPageNumberChanged={function noRefCheck() {}}
-            onRowClick={function noRefCheck() {}}
-            pageSize={7}
-          />
-        </Tab>
-        <Tab tabKey={2} tabName={"SIGNED"}>
-          <div>dawodhf</div>
-        </Tab>
-        <Tab tabKey={3} tabName={"PENDING"}>
-          <div>dawodhf</div>
-        </Tab>
-        <Tab tabKey={4} tabName={"REJECTED"}>
-          <div>dawodhf</div>
-        </Tab>
-      </TabList>
+      <Tabs
+        defaultActiveKey="1"
+        items={[
+          {
+            key: "1",
+            label: `ALL`,
+            children: (
+              <Table
+                tableBackgroundColor="#F5F5F5"
+                customTableBorder="border-top:1px"
+                headerBgColor="#FFFFFF"
+                columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
+                header={[
+                  "Sr.",
+                  "Name",
+                  "Total Participants",
+                  "Status",
+                  "Created On",
+                  "Updated On",
+                  "Actions",
+                ]}
+                alignCellItems="center"
+                data={[
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                  [
+                    <div key={1}>1</div>,
+                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
+                    10,
+                    <Badge state="success" text="SIGNED" key={3} />,
+                    "09/02/2021 10:00 PM",
+                    "09/02/2021 10:00 PM",
+                    <div css={mixins.flexJustifiedBetween} key={4}>
+                      <Button type="link" onClick={() => {}}>
+                        View
+                      </Button>
+                      <MoreOutlined />
+                    </div>,
+                  ],
+                ]}
+                maxPages={3}
+                onPageNumberChanged={function noRefCheck() {}}
+                onRowClick={function noRefCheck() {}}
+                pageSize={4}
+              />
+            ),
+          },
+          {
+            key: "2",
+            label: `SIGNED`,
+            children: `Content of Tab Pane 1`,
+          },
+          {
+            key: "3",
+            label: `PENDING`,
+            children: `Content of Tab Pane 1`,
+          },
+        ]}
+        onChange={(value) => {
+          console.log(value);
+        }}
+      />
+      ;
       <Drawer
         open={openDrawer}
         width={"30%"}
@@ -247,7 +247,7 @@ const UserDocuments = () => {
             name="Name"
             rules={[{ required: true, message: "Please input your Name!" }]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -261,7 +261,7 @@ const UserDocuments = () => {
               },
             ]}
           >
-             <Input/>
+            <Input />
           </Form.Item>
           <Form.Item name="DateRange" label="Contract Validity Date">
             <DatePicker.RangePicker />
@@ -273,7 +273,10 @@ const UserDocuments = () => {
             <Input />
           </Form.Item>
           <Form.Item name="Description" label="Description">
-            <Input.TextArea rows={4} onChange={(e) => setDescription(e.target.value)} />
+            <Input.TextArea
+              rows={4}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </Form.Item>
           <Form.Item name="UploadedFile" label="Dragger">
             <Upload
@@ -298,3 +301,14 @@ const UserDocuments = () => {
 };
 
 export default UserDocuments;
+function addContract(
+  category: any,
+  description: string,
+  name: string,
+  email: any,
+  arg4: string,
+  sha256: string,
+  arg6: string
+) {
+  throw new Error("Function not implemented.");
+}
