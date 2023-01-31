@@ -1,21 +1,38 @@
 /** @jsxImportSource @emotion/react */
 import { ENSAvatar } from "@web3uikit/web3";
-import { utils } from "../../styles1";
-import Button from "../shared/Button";
 import * as styles from "./styles";
+import { ConnectWallet } from "@thirdweb-dev/react";
+import Button from "../shared/Button";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Header = () => {
+  const router = useRouter();
+ 
   return (
     <div css={styles.header}>
-      <p>Web Docs</p>
-      <Button
-        type="secondary"
-        onClick={() => {}}
-        size="small"
-        style={{ height: "fit-content", width: "7%" }}
-      >
-        Login
-      </Button>
+      <div css={styles.topBar}>
+        <div css={styles.webName}>WEB3-DOCS</div>
+        <div css={styles.subHeading} onClick={()=>{router.push("/docs")}}>
+          Docs
+        </div>
+        <div css={styles.subHeading}>
+          FAQs
+        </div>
+        <div css={styles.subHeading}>
+          About Us
+        </div>
+      </div>
+      
+      <div css={styles.loginStatus}>
+        <Button type="link" onClick={() => { }} style={styles.buttonStyle}>Get Started</Button>
+        <div css={{position:"relative"}}>
+          <Button type="link" onClick={() => { }} style={styles.buttonStyle}>Login</Button>
+            <div css={styles.loginButton}>
+              <ConnectWallet btnTitle={"Login"} css={styles.loginButton} />
+            </div>
+          </div>
+      </div>
     </div>
   );
 };

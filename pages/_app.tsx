@@ -8,7 +8,6 @@ const activeChainId = ChainId.Mainnet;
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider desiredChainId={activeChainId}>
-      <link href='https://fonts.googleapis.com/css?family=Arimo:400,700,400italic,700italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'></link>
       <Component {...pageProps} />
     </ThirdwebProvider>
   );
