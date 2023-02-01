@@ -32,6 +32,13 @@ const UserDocuments = () => {
     console.log("Failed:", errorInfo);
   };
 
+  async function getImageUrlFromMetaData(IPFSUri: string) {
+    IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
+    const response =  await fetch(IPFSUri)
+    const responseJSON = await response.json()
+    return responseJSON["image"]
+  }
+
   const uploadDocToIPFS = async (values: any) => {
     try {
       console.log("NFT TOKEN IS:");
