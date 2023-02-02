@@ -12,16 +12,18 @@ export const ContractHandler: React.FC<Props> = ({ children }) =>{
     const [userAddress, setUserAddress] = useState<any>();
 
     const fetchWalletInfo = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts", []);
-        setUserAddress(accounts[0])
-        provider.on('accountsChanged', function (accounts) {
+        if (typeof window !== "undefined") {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await provider.send("eth_requestAccounts", []);
             setUserAddress(accounts[0])
-        });
+            provider.on('accountsChanged', function (accounts) {
+                setUserAddress(accounts[0])
+            });
+        }
     }
 
     const checkAndConnectContract = async () => {
-        if(!contract){
+        if(!contract && typeof window !== "undefined"){
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const tempContract = new ethers.Contract(contractAddress["5"][0], abi, provider.getSigner());
             setContract(tempContract);
