@@ -33,7 +33,7 @@ const UserDocuments = () => {
   };
 
   async function getImageUrlFromMetaData(IPFSUri: string) {
-    IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
+    IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
     const response =  await fetch(IPFSUri)
     const responseJSON = await response.json()
     return responseJSON["image"]
@@ -60,7 +60,7 @@ const UserDocuments = () => {
         const sha256 = await blobToSHA256(uplodedDocument);
         console.log("SHA256 of File :=> ",sha256)
         const currentTime = new Date();
-
+        const imageUrl = await getImageUrlFromMetaData(metadata.url)
         addContract(
           values.Category || "",
           values.Type || "",
@@ -71,7 +71,7 @@ const UserDocuments = () => {
           (values.DateRange[1]['$d']).toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          (metadata.url),
+          imageUrl,
         );
 
       }
