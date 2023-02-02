@@ -22,9 +22,9 @@ const UserDocuments = () => {
 
   const { addContract, fetchWalletInfo } = useContext(contractContext) as ContractContextType;
   fetchWalletInfo()
+
   const onFinish = (values: any) => {
-    console.log(values);
-    console.log("Success:", values);
+    console.log("Details Submitted For Upload:", values);
     uploadDocToIPFS(values);
   };
 
@@ -41,15 +41,13 @@ const UserDocuments = () => {
 
   const uploadDocToIPFS = async (values: any) => {
     try {
-      console.log("NFT TOKEN IS:");
-      console.log(NFT_TOKEN);
+      console.log("NFT TOKEN IS:",NFT_TOKEN);
       if (NFT_TOKEN) {
-        console.log(NFT_TOKEN);
         const client = new NFTStorage({
           token: NFT_TOKEN,
         });
-        console.log("Hi I am here");
-        console.log(client);
+        console.log("NFT Storage Client:=>",client);
+
         const metadata = await client.store({
           name: name,
           description: description,
@@ -57,23 +55,25 @@ const UserDocuments = () => {
             type: uplodedDocument.type,
           }),
         });
-        console.log(metadata);
+
+        console.log("MetaData :=> ",metadata);
         const sha256 = await blobToSHA256(uplodedDocument);
+        console.log("SHA256 of File :=> ",sha256)
         const currentTime = new Date();
-        //@TODO should get values from the form (remove hardcoded strings)
+
         addContract(
-          values.category || "category",
-          "type",
-          description,
-          name || "name",
-          values.email || "email",
-          "start_date",
-          "end_date",
+          values.Category || "",
+          values.Type || "",
+          values.Description || "",
+          values.Name || "",
+          values.Email || "",
+          (values.DateRange[0]['$d']).toLocaleString() || "",
+          (values.DateRange[1]['$d']).toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          "metadata",
+          (metadata.url),
         );
-        //upload details to Blockchain
+
       }
     } catch (error) {
       console.error(error);
