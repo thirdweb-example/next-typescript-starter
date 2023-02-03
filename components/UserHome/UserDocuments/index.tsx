@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import { Badge, Tab, Table, TabList, Upload } from "@web3uikit/core";
-import { Drawer, Form, Input, DatePicker, Tabs } from "antd";
+import { Badge, Tab, Table, TabList } from "@web3uikit/core";
+import { Drawer, Form, Input, DatePicker, Tabs, Upload, Button } from "antd";
 import { toast } from "react-toastify";
 import { useEffect, useState, useContext } from "react";
 import { colors, mixins, typography } from "../../../styles1";
-import Button from "../../shared/Button";
+// import Button from "../../shared/Button";
 import { NFTStorage, File } from "nft.storage";
 import * as styles from "./styles";
 import { NFT_TOKEN } from "../../../constants/constants";
 import { blobToSHA256 } from "file-to-sha256";
-import { MoreOutlined } from "@ant-design/icons";
+import { MoreOutlined, UploadOutlined } from "@ant-design/icons";
 import { ContractContextType } from "./../Contract/context";
 import { contractContext } from "./../Contract";
 
@@ -17,7 +17,9 @@ const UserDocuments = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [uplodedDocument, setUploadedDocument] = useState<any>();
   const [userDocuments, setUserUploadedDocuments] = useState<any>();
-  const { addContract, getUserContracts, fetchWalletInfo } = useContext(contractContext) as ContractContextType;
+  const { addContract, getUserContracts, fetchWalletInfo } = useContext(
+    contractContext
+  ) as ContractContextType;
 
   const loadMyDocuments = async () => {
     const userContracts = await getUserContracts();
@@ -28,46 +30,43 @@ const UserDocuments = () => {
     console.log(userDocuments);
 
     setUserUploadedDocuments(userContracts);
-  }
+  };
 
-  useEffect( ()=>{
+  useEffect(() => {
     console.log("User Documents now are: => ");
     console.log(userDocuments);
-  },[userDocuments])
-
+  }, [userDocuments]);
 
   const populateUseDocuments = async () => {
     console.log("Hi I am here now I will load contacts");
-    await loadMyDocuments()
+    await loadMyDocuments();
     console.log("I guess the contacts would have been loaded above");
     console.log("Moving On");
     console.log("Displaying Data");
     console.log("The data is:");
     console.log(userDocuments);
-    const data = userDocuments.map( (document :any,idx :any) => {
-        console.log(document);
-        console.log(idx);
-        return (
-          [
-            <div key={1}>{idx+1}</div>,
-            <p key={2}>{document.Type}</p>,
-            <p key={3}>{document.Desc}</p>,
-            <p key={4}>{document.Category}</p>,
-            <p key={5}>{document.startDate}</p>,
-            <p key={6}>{document.endDate}</p>,
-            <div css={mixins.flexJustifiedBetween} key={4}>
-              <Button type="link" onClick={() => {}}>
-                View
-              </Button>
-              <MoreOutlined />
-            </div>
-          ]
-        )
-    }) 
+    const data = userDocuments.map((document: any, idx: any) => {
+      console.log(document);
+      console.log(idx);
+      return [
+        <div key={1}>{idx + 1}</div>,
+        <p key={2}>{document.Type}</p>,
+        <p key={3}>{document.Desc}</p>,
+        <p key={4}>{document.Category}</p>,
+        <p key={5}>{document.startDate}</p>,
+        <p key={6}>{document.endDate}</p>,
+        <div css={mixins.flexJustifiedBetween} key={4}>
+          <Button type="link" onClick={() => {}}>
+            View
+          </Button>
+          <MoreOutlined />
+        </div>,
+      ];
+    });
     console.log("Displaying data completed");
-  }
+  };
 
-  fetchWalletInfo()
+  fetchWalletInfo();
 
   const onFinish = (values: any) => {
     console.log("Details Submitted For Upload:", values);
@@ -80,22 +79,21 @@ const UserDocuments = () => {
 
   async function getImageUrlFromMetaData(IPFSUri: string) {
     IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
-    const response =  await fetch(IPFSUri)
-    const responseJSON = await response.json()
-    return responseJSON["image"]
+    const response = await fetch(IPFSUri);
+    const responseJSON = await response.json();
+    return responseJSON["image"];
   }
 
   const uploadDocToIPFS = async (values: any) => {
     try {
-      console.log("NFT TOKEN IS:",NFT_TOKEN);
+      console.log("NFT TOKEN IS:", NFT_TOKEN);
       if (NFT_TOKEN) {
-
-        //TODO : set loading state to be true here 
+        //TODO : set loading state to be true here
 
         const client = new NFTStorage({
           token: NFT_TOKEN,
         });
-        console.log("NFT Storage Client:=>",client);
+        console.log("NFT Storage Client:=>", client);
 
         const metadata = await client.store({
           name: values.Name,
@@ -105,9 +103,9 @@ const UserDocuments = () => {
           }),
         });
 
-        console.log("MetaData :=> ",metadata);
+        console.log("MetaData :=> ", metadata);
         const sha256 = await blobToSHA256(uplodedDocument);
-        console.log("SHA256 of File :=> ",sha256)
+        console.log("SHA256 of File :=> ", sha256);
         const currentTime = new Date();
         //const imageUrl = await getImageUrlFromMetaData(metadata.url)
         await addContract(
@@ -116,14 +114,14 @@ const UserDocuments = () => {
           values.Description || "",
           values.Name || "",
           values.Email || "",
-          (values.DateRange[0]['$d']).toLocaleString() || "",
-          (values.DateRange[1]['$d']).toLocaleString() || "",
+          values.DateRange[0]["$d"].toLocaleString() || "",
+          values.DateRange[1]["$d"].toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          metadata.url,
+          metadata.url
         );
-        
-         await loadMyDocuments();
+
+        await loadMyDocuments();
         await populateUseDocuments();
         //TODO: set loading state to be false here
       }
@@ -168,33 +166,28 @@ const UserDocuments = () => {
             label: `ALL`,
             children: (
               <Table
-              tableBackgroundColor="#F5F5F5"
-              customTableBorder="border-top:1px"
-              headerBgColor="#FFFFFF"
-              columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
-              header={[
-                "Sr.",
-                "Type",
-                "Desciption",
-                "Category",
-                "StartDate",
-                "EndDate",
-                "Actions",
-              ]}
-              alignCellItems="center"
-
-              data={
-                []
-              }
-
-
-              maxPages={3}
-              onPageNumberChanged={function noRefCheck() {}}
-              onRowClick={function noRefCheck() {}}
-              pageSize={4}
-            />
-          ),
-        },
+                tableBackgroundColor="#F5F5F5"
+                customTableBorder="border-top:1px"
+                headerBgColor="#FFFFFF"
+                columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
+                header={[
+                  "Sr.",
+                  "Type",
+                  "Desciption",
+                  "Category",
+                  "StartDate",
+                  "EndDate",
+                  "Actions",
+                ]}
+                alignCellItems="center"
+                data={[]}
+                maxPages={3}
+                onPageNumberChanged={function noRefCheck() {}}
+                onRowClick={function noRefCheck() {}}
+                pageSize={4}
+              />
+            ),
+          },
           {
             key: "2",
             label: `SIGNED`,
@@ -259,23 +252,21 @@ const UserDocuments = () => {
             <Input />
           </Form.Item>
           <Form.Item name="Description" label="Description">
-            <Input.TextArea
-              rows={4}
-            />
+            <Input.TextArea rows={4} />
           </Form.Item>
           <Form.Item name="UploadedFile" label="Dragger">
             <Upload
-              acceptedFiles="image/jpeg"
-              descriptionText="Only .jpeg files are accepted"
+              listType="picture-card"
               onChange={(file) => {
                 console.log(file);
-                setUploadedDocument(file);
+                setUploadedDocument(file.fileList);
               }}
-              theme="withIcon"
-            />
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" typeAttribute="submit" onClick={() => {}}>
+            <Button type="primary" htmlType="" onClick={() => {}}>
               Submit
             </Button>
           </Form.Item>
