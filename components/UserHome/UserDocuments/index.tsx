@@ -14,13 +14,59 @@ import { ContractContextType } from "./../Contract/context";
 import { contractContext } from "./../Contract";
 
 const UserDocuments = () => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [uplodedDocument, setUploadedDocument] = useState<any>();
+  const [userDocuments, setUserUploadedDocuments] = useState<any>();
+  const { addContract, getUserContracts, fetchWalletInfo } = useContext(contractContext) as ContractContextType;
 
-  const { addContract, fetchWalletInfo } = useContext(contractContext) as ContractContextType;
+  const loadMyDocuments = async () => {
+    const userContracts = await getUserContracts();
+    console.log("User Contracts are :=> ");
+    console.log(userContracts);
+
+    console.log("User Documents here are: => ");
+    console.log(userDocuments);
+
+    setUserUploadedDocuments(userContracts);
+  }
+
+  useEffect( ()=>{
+    console.log("User Documents now are: => ");
+    console.log(userDocuments);
+  },[userDocuments])
+
+
+  const populateUseDocuments = async () => {
+    console.log("Hi I am here now I will load contacts");
+    await loadMyDocuments()
+    console.log("I guess the contacts would have been loaded above");
+    console.log("Moving On");
+    console.log("Displaying Data");
+    console.log("The data is:");
+    console.log(userDocuments);
+    const data = userDocuments.map( (document :any,idx :any) => {
+        console.log(document);
+        console.log(idx);
+        return (
+          [
+            <div key={1}>{idx+1}</div>,
+            <p key={2}>{document.Type}</p>,
+            <p key={3}>{document.Desc}</p>,
+            <p key={4}>{document.Category}</p>,
+            <p key={5}>{document.startDate}</p>,
+            <p key={6}>{document.endDate}</p>,
+            <div css={mixins.flexJustifiedBetween} key={4}>
+              <Button type="link" onClick={() => {}}>
+                View
+              </Button>
+              <MoreOutlined />
+            </div>
+          ]
+        )
+    }) 
+    console.log("Displaying data completed");
+  }
+
   fetchWalletInfo()
 
   const onFinish = (values: any) => {
@@ -43,14 +89,17 @@ const UserDocuments = () => {
     try {
       console.log("NFT TOKEN IS:",NFT_TOKEN);
       if (NFT_TOKEN) {
+
+        //TODO : set loading state to be true here 
+
         const client = new NFTStorage({
           token: NFT_TOKEN,
         });
         console.log("NFT Storage Client:=>",client);
 
         const metadata = await client.store({
-          name: name,
-          description: description,
+          name: values.Name,
+          description: values.Description,
           image: new File([uplodedDocument], uplodedDocument.name, {
             type: uplodedDocument.type,
           }),
@@ -60,8 +109,8 @@ const UserDocuments = () => {
         const sha256 = await blobToSHA256(uplodedDocument);
         console.log("SHA256 of File :=> ",sha256)
         const currentTime = new Date();
-        const imageUrl = await getImageUrlFromMetaData(metadata.url)
-        addContract(
+        //const imageUrl = await getImageUrlFromMetaData(metadata.url)
+        await addContract(
           values.Category || "",
           values.Type || "",
           values.Description || "",
@@ -71,25 +120,30 @@ const UserDocuments = () => {
           (values.DateRange[1]['$d']).toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          imageUrl,
+          metadata.url,
         );
-
+        
+         await loadMyDocuments();
+        await populateUseDocuments();
+        //TODO: set loading state to be false here
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const normFile = (e: any) => {
-    console.log("Upload event:", e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
+  // const normFile = (e: any) => {
+  //   console.log("Upload event:", e);
+  //   if (Array.isArray(e)) {
+  //     return e;
+  //   }
+  //   return e?.fileList;
+  // };
+
   useEffect(() => {
     console.log(uplodedDocument);
   }, [uplodedDocument]);
+
   return (
     <div css={styles.userDocuments}>
       <div css={styles.heading}>
@@ -114,113 +168,33 @@ const UserDocuments = () => {
             label: `ALL`,
             children: (
               <Table
-                tableBackgroundColor="#F5F5F5"
-                customTableBorder="border-top:1px"
-                headerBgColor="#FFFFFF"
-                columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
-                header={[
-                  "Sr.",
-                  "Name",
-                  "Total Participants",
-                  "Status",
-                  "Created On",
-                  "Updated On",
-                  "Actions",
-                ]}
-                alignCellItems="center"
-                data={[
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                  [
-                    <div key={1}>1</div>,
-                    <p key={2}>sdcscscscscdscscscdscddscscdscscdscscsd.....</p>,
-                    10,
-                    <Badge state="success" text="SIGNED" key={3} />,
-                    "09/02/2021 10:00 PM",
-                    "09/02/2021 10:00 PM",
-                    <div css={mixins.flexJustifiedBetween} key={4}>
-                      <Button type="link" onClick={() => {}}>
-                        View
-                      </Button>
-                      <MoreOutlined />
-                    </div>,
-                  ],
-                ]}
-                maxPages={3}
-                onPageNumberChanged={function noRefCheck() {}}
-                onRowClick={function noRefCheck() {}}
-                pageSize={4}
-              />
-            ),
-          },
+              tableBackgroundColor="#F5F5F5"
+              customTableBorder="border-top:1px"
+              headerBgColor="#FFFFFF"
+              columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
+              header={[
+                "Sr.",
+                "Type",
+                "Desciption",
+                "Category",
+                "StartDate",
+                "EndDate",
+                "Actions",
+              ]}
+              alignCellItems="center"
+
+              data={
+                []
+              }
+
+
+              maxPages={3}
+              onPageNumberChanged={function noRefCheck() {}}
+              onRowClick={function noRefCheck() {}}
+              pageSize={4}
+            />
+          ),
+        },
           {
             key: "2",
             label: `SIGNED`,
@@ -287,7 +261,6 @@ const UserDocuments = () => {
           <Form.Item name="Description" label="Description">
             <Input.TextArea
               rows={4}
-              onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Item>
           <Form.Item name="UploadedFile" label="Dragger">
@@ -313,14 +286,3 @@ const UserDocuments = () => {
 };
 
 export default UserDocuments;
-function addContract(
-  category: any,
-  description: string,
-  name: string,
-  email: any,
-  arg4: string,
-  sha256: string,
-  arg6: string
-) {
-  throw new Error("Function not implemented.");
-}
