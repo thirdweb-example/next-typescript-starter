@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { colors, mixins, typography } from "../../../styles1";
 import KycHome from "../../Kyc";
+import Referral from "../../Referral";
 import Button from "../../shared/Button";
 import * as styles from "./styles";
 
@@ -45,7 +46,7 @@ const UserDetails = () => {
     <div css={styles.userDocuments}>
       <div css={styles.heading}>
         <p css={{ ...typography.H5_20_bold, color: colors.Zeb_Solid_Dark }}>
-          Your Documents
+          Your Profile
         </p>
       </div>
       <Tabs
@@ -132,7 +133,7 @@ const UserDetails = () => {
           {
             key: "2",
             label: `REFERRAL`,
-            children: `Content of Tab Pane 1`,
+            children: <Referral />,
           },
           {
             key: "3",

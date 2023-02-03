@@ -9,9 +9,10 @@ export const header = css({
   justifyContent: "space-between"
 });
 
-export const webName = css({
+export const webName = (path: string)=>css({
   ...typography.B2_20_regular,
-  textDecoration: "none"
+  textDecoration: "none",
+  color: path==="/"?"" : "#444444"
 })
 
 export const topBar = css({
@@ -60,3 +61,32 @@ export const loginButton = css({
     width: "140px !important"
   }
 })
+
+export const address = css({
+  position: "relative",
+  color: "black",
+  display: "flex",
+  alignItems: "center"
+})
+export const signout = css({
+  position: "fixed",
+  backgroundColor: "white",
+  padding: "10px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  zIndex: 99
+})
+
+export const signoutContainer = css({
+  position: "absolute",
+  top: "40px",
+})
+
+export const selectOverlay = css({
+  position: "fixed",
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  zIndex: "9",
+});
