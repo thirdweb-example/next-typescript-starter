@@ -1,22 +1,31 @@
 import createReducer from "../utils/redux/createReducer";
 
 export enum ActionType {
-  SET_USER_ADDRESS = "SET_USER_ADDRESS"
+  SET_DOCUMENTS_FETCHED = "SET_DOCUMENTS_FETCHED",
+  SET_DOCUMENTS = "SET_DOCUMENTS"
 }
 
 export interface UserState {
-  address: string;
+  documentsFetched: boolean;
+  documents: any
 }
 
 const initialState: UserState = {
-  address: ""
+  documentsFetched: false,
+  documents: []
 }
 
 export default createReducer<UserState>(initialState, {
-  [ActionType.SET_USER_ADDRESS](state: UserState, payload: unknown): UserState {
+  [ActionType.SET_DOCUMENTS_FETCHED](state: UserState, payload: unknown): UserState {
     return {
       ...state,
-      address: payload as string
+      documentsFetched: payload as boolean
+    };
+  },
+  [ActionType.SET_DOCUMENTS](state: UserState, payload: unknown): UserState {
+    return {
+      ...state,
+      documents: payload as any[]
     };
   }
 });

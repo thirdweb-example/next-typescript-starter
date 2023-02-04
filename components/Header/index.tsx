@@ -1,16 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import * as styles from "./styles";
 import Button from "../shared/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import metamask from "../../public/images/metamsk 1.png";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { StoreState } from "../../reducers/index";
+import { UserState } from "../../reducers/userInfo";
+import { useCallback } from "react";
+import { ContractContextType } from "./../UserHome/Contract/context";
+import { contractContext } from "./../UserHome/Contract";
+import { setDocuments, setDocumentsFetched } from "../../actions/user";
 
 const Header = () => {
   const router = useRouter();
   const pathName = router.pathname;
   const [defaultAccount, setDefaultAccount] = useState("");
   const [signoutVisible, setSignOutVisible] = useState(false);
+  const userState = useSelector<StoreState, UserState>(state => state.user);
+  const { addContract, getUserContracts, fetchWalletInfo } = useContext(
+    contractContext
+  ) as ContractContextType;
 
   const accountChangedHandler = (newAccount:any) => {
     if (newAccount) {
@@ -20,13 +31,18 @@ const Header = () => {
     else sessionStorage.clear();
   }
 
+  const loadUserDocuments = useCallback(async () => {
+    const userContracts = await getUserContracts();
+    if(userContracts){
+      setDocumentsFetched(true);
+    } else {
+      setDocumentsFetched(false);
+    }
+    setDocuments(userContracts);
+  },[getUserContracts])
+
   useEffect(() => {
     const userAddress = sessionStorage.getItem("user_address");
-    const loginCheck = window.ethereum?.isBraveWallet ||
-      window.ethereum?.isMetaMask ||
-      window.ethereum?.isCoinbaseWallet ||
-      window.ethereum?.isFrame ||
-      window.ethereum?.isTally;
 
     if (!userAddress || userAddress === "") {
       if (pathName !== "/") {
@@ -38,7 +54,10 @@ const Header = () => {
     } else {
       setDefaultAccount("");
     }
-  }, []);
+    if (!userState.documentsFetched) {
+      loadUserDocuments();
+    }
+  }, [loadUserDocuments, pathName, router, userState.documentsFetched]);
   
   const connectWalletHandler = () => {
     if (window.ethereum) {

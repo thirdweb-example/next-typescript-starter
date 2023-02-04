@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { Badge, Tab, Table, TabList } from "@web3uikit/core";
-import { Drawer, Form, Input, DatePicker, Tabs, Upload, Button } from "antd";
+import { Badge, Tab, Table, TabList, Upload as UploadFile } from "@web3uikit/core";
+import { Drawer, Form, Input, DatePicker, Tabs, Upload, Button as AntButton } from "antd";
+import Button from "../../shared/Button";
 import { toast } from "react-toastify";
 import { useEffect, useState, useContext } from "react";
 import { colors, mixins, typography } from "../../../styles1";
@@ -56,9 +57,9 @@ const UserDocuments = () => {
         <p key={5}>{document.startDate}</p>,
         <p key={6}>{document.endDate}</p>,
         <div css={mixins.flexJustifiedBetween} key={4}>
-          <Button type="link" onClick={() => {}}>
+          <AntButton type="link" onClick={() => {}}>
             View
-          </Button>
+          </AntButton>
           <MoreOutlined />
         </div>,
       ];
@@ -257,16 +258,28 @@ const UserDocuments = () => {
           <Form.Item name="UploadedFile" label="Dragger">
             <Upload
               listType="picture-card"
+              multiple={false}
               onChange={(file) => {
-                console.log(file);
-                setUploadedDocument(file.fileList);
+                console.log(file, "FILES");
+                setUploadedDocument(file.fileList[0]);
               }}
             >
-              <Button icon={<UploadOutlined />}>Upload</Button>
+              <AntButton icon={<UploadOutlined />}>Upload</AntButton>
             </Upload>
           </Form.Item>
+          <Form.Item name="UploadedFile" label="Dragger">
+            <UploadFile
+              acceptedFiles="image/jpeg"
+              descriptionText="Only .jpeg files are accepted"
+              onChange={(file) => {
+                console.log(file);
+                setUploadedDocument(file);
+              }}
+              theme="withIcon"
+            />
+          </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="" onClick={() => {}}>
+            <Button type="primary" typeAttribute="submit" onClick={() => {}}>
               Submit
             </Button>
           </Form.Item>
