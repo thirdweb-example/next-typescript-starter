@@ -70,7 +70,7 @@ const UserDocuments = () => {
         <p key={6}>{document.EndDate}</p>,
         <div css={mixins.flexJustifiedBetween} key={4}>
           {/* <Button type="link" onClick={() => {}}> */}
-          <a href={document.CreateDate} target="_blank" rel="noreferrer">
+          <a href={document.IPFSURI} target="_blank" rel="noreferrer">
             View
           </a>
           {/* </Button> */}
@@ -95,12 +95,12 @@ const UserDocuments = () => {
     console.log("Failed:", errorInfo);
   };
 
-  // async function getImageUrlFromMetaData(IPFSUri: string) {
-  //   IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
-  //   const response = await fetch(IPFSUri);
-  //   const responseJSON = await response.json();
-  //   return responseJSON["image"];
-  // }
+   async function getImageUrlFromMetaData(IPFSUri: string) {
+     IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
+     const response = await fetch(IPFSUri);
+     const responseJSON = await response.json();
+     return responseJSON["image"];
+   }
 
   const uploadDocToIPFS = async (values: any) => {
     try {
@@ -125,7 +125,7 @@ const UserDocuments = () => {
         const sha256 = await blobToSHA256(uplodedDocument);
         console.log("SHA256 of File :=> ", sha256);
         const currentTime = new Date();
-        //const imageUrl = await getImageUrlFromMetaData(metadata.url)
+        const imageUrl = await getImageUrlFromMetaData(metadata.url)
         await addContract(
           values.Category || "",
           values.Type || "",
@@ -136,7 +136,7 @@ const UserDocuments = () => {
           values.DateRange[1]["$d"].toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          metadata.url
+          imageUrl
         );
 
         // await loadMyDocuments();

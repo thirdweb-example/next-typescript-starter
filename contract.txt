@@ -1,0 +1,121 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.8.9 <0.9.0;
+
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/Strings.sol';
+
+
+contract CreateContract is Ownable {
+
+  using Strings for uint256;
+
+
+  struct structContractInfo { 
+      string Category;
+      string Type;
+      string Desc;
+      string Name;
+      string Email;
+      string StartDate;
+      string EndDate;
+      string CreateDate;
+      string IPFSURI;
+  }
+
+
+  uint256 public ContractCreatePrice = 0.001 ether;
+
+
+  mapping(string => structContractInfo) public ContractsMap;
+  mapping(address => string[]) public ContractCreatorMap;  
+  mapping(address => uint256) internal OrgOwners;
+  mapping(string => uint256) internal DailyContractCount;
+  bool public isContractPaused = false;
+
+
+  constructor(
+  ) {
+    OrgOwners[_msgSender()] = 1;
+  }
+
+ 
+  function isOrgOwner(address _add) public view returns (bool) {
+    return OrgOwners[_add] > 0
+        ? true
+        : false;
+  }
+
+
+  function addOrgOwner(address _orgOwner) public onlyOwner {
+     OrgOwners[_orgOwner] = 1;
+  }
+
+  function setContractState(bool _pauseState) public onlyOwner {
+    isContractPaused = _pauseState;
+  }
+
+  function setPrice(uint256 _price) public onlyOwner {
+    // price can be set to 0
+    ContractCreatePrice = _price;
+  }
+
+
+  function addContract(string memory _category,
+                      string memory _type,
+                      string memory _desc,
+                      string memory _name,
+                      string memory _email,
+                      string memory _st_date,
+                      string memory _end_date,
+                      string memory _createdate,
+                      string memory _SHA256,
+                      string memory _IPFSURI) public payable {
+
+    require(!isContractPaused, 'Contract is paused.');
+    require(bytes(_SHA256).length >= 0, 'Invalid Document Code.');
+    require(msg.value >= ContractCreatePrice, 'Not Enough Funds!');
+    require(bytes(ContractsMap[_SHA256].Category).length == 0, 'Document already exists.');
+
+    ContractsMap[_SHA256] = structContractInfo(_category, _type, _desc, _name, _email, _st_date, _end_date, _createdate, _IPFSURI);
+    ContractCreatorMap[msg.sender].push(_SHA256);
+    DailyContractCount[_createdate] += 1;
+  }
+
+  function getContractsCount_address(address _add) public view returns ( uint256 ) {
+    return ContractCreatorMap[_add].length;
+  }
+
+  function getContractsCount_date(string memory _createdate) public view returns ( uint256 ) {
+    return DailyContractCount[_createdate];
+  }
+
+  function getContract(string memory _SHA256) public view returns ( structContractInfo memory ) {
+    return ContractsMap[_SHA256];
+  }
+
+  function getContractbyCreator(address _add, uint256 _index) public view returns ( structContractInfo memory ) {
+    unchecked {
+      uint256 len = ContractCreatorMap[_add].length;
+      require(_index >= 0, 'Value cannot be less than 0');
+      require(_index < len, 'Index out of range');
+      
+      return ContractsMap[ContractCreatorMap[_add][_index]];
+    }
+  }
+
+  function getContractBalance() public view returns ( uint256 ) {
+    return(address(this).balance);
+  }
+
+
+  function withdraw() public onlyOwner {
+    (bool os, ) = payable(owner()).call{value: address(this).balance}('');
+    require(os);
+  }
+
+ 
+  fallback() external  {
+  }
+
+  
+}
