@@ -1,6 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import { Badge, Tab, Table, TabList } from "@web3uikit/core";
-import { Drawer, Form, Input, DatePicker, Tabs, Upload, Button } from "antd";
+import { Badge, Tab, Table, TabList, Upload } from "@web3uikit/core";
+import {
+  Drawer,
+  Form,
+  Input,
+  DatePicker,
+  Tabs,
+  Button as AntButton,
+  Spin,
+} from "antd";
 import { toast } from "react-toastify";
 import { useEffect, useState, useContext } from "react";
 import { colors, mixins, typography } from "../../../styles1";
@@ -12,64 +20,74 @@ import { blobToSHA256 } from "file-to-sha256";
 import { MoreOutlined, UploadOutlined } from "@ant-design/icons";
 import { ContractContextType } from "./../Contract/context";
 import { contractContext } from "./../Contract";
+import Button from "../../shared/Button";
 
 const UserDocuments = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [uplodedDocument, setUploadedDocument] = useState<any>();
   const [userDocuments, setUserUploadedDocuments] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
   const { addContract, getUserContracts, fetchWalletInfo } = useContext(
     contractContext
   ) as ContractContextType;
 
-  const loadMyDocuments = async () => {
-    const userContracts = await getUserContracts();
-    console.log("User Contracts are :=> ");
-    console.log(userContracts);
+  // useEffect(() => {
+  //   // fetchWalletInfo();
+  //   //
+  // });
+  // useEffect(() => {
+  //   const updateData = async () => {
+  //     const userContract = getUserContracts();
+  //     setUserUploadedDocuments(userContract);
+  //   };
+  //   // updateData();
+  // });
+  // const loadMyDocuments = async () => {
+  //   const userContracts = await getUserContracts();
+  //   console.log("User Contracts are :=> ");
+  //   console.log(userContracts);
 
-    console.log("User Documents here are: => ");
-    console.log(userDocuments);
+  //   console.log("User Documents here are: => ");
+  //   console.log(userDocuments);
 
-    setUserUploadedDocuments(userContracts);
-  };
+  //   setUserUploadedDocuments(userContracts);
+  // };
 
-  useEffect(() => {
-    console.log("User Documents now are: => ");
-    console.log(userDocuments);
-  }, [userDocuments]);
+  // useEffect(() => {
+  //   console.log("User Documents now are: => ");
+  //   console.log(userDocuments);
+  // }, [userDocuments]);
 
-  const populateUseDocuments = async () => {
-    console.log("Hi I am here now I will load contacts");
-    await loadMyDocuments();
-    console.log("I guess the contacts would have been loaded above");
-    console.log("Moving On");
-    console.log("Displaying Data");
-    console.log("The data is:");
-    console.log(userDocuments);
+  const populateUseDocuments = () => {
+    if (!userDocuments) return [[]];
     const data = userDocuments.map((document: any, idx: any) => {
-      console.log(document);
-      console.log(idx);
       return [
         <div key={1}>{idx + 1}</div>,
         <p key={2}>{document.Type}</p>,
         <p key={3}>{document.Desc}</p>,
         <p key={4}>{document.Category}</p>,
-        <p key={5}>{document.startDate}</p>,
-        <p key={6}>{document.endDate}</p>,
+        <p key={5}>{document.StartDate}</p>,
+        <p key={6}>{document.EndDate}</p>,
         <div css={mixins.flexJustifiedBetween} key={4}>
-          <Button type="link" onClick={() => {}}>
+          {/* <Button type="link" onClick={() => {}}> */}
+          <a href={document.CreateDate} target="_blank" rel="noreferrer">
             View
-          </Button>
+          </a>
+          {/* </Button> */}
           <MoreOutlined />
         </div>,
       ];
     });
-    console.log("Displaying data completed");
+    console.log(data);
+
+    return data;
   };
 
-  fetchWalletInfo();
+  // fetchWalletInfo();
 
   const onFinish = (values: any) => {
     console.log("Details Submitted For Upload:", values);
+    setLoading(true);
     uploadDocToIPFS(values);
   };
 
@@ -77,12 +95,12 @@ const UserDocuments = () => {
     console.log("Failed:", errorInfo);
   };
 
-  async function getImageUrlFromMetaData(IPFSUri: string) {
-    IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
-    const response = await fetch(IPFSUri);
-    const responseJSON = await response.json();
-    return responseJSON["image"];
-  }
+  // async function getImageUrlFromMetaData(IPFSUri: string) {
+  //   IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
+  //   const response = await fetch(IPFSUri);
+  //   const responseJSON = await response.json();
+  //   return responseJSON["image"];
+  // }
 
   const uploadDocToIPFS = async (values: any) => {
     try {
@@ -121,11 +139,14 @@ const UserDocuments = () => {
           metadata.url
         );
 
-        await loadMyDocuments();
-        await populateUseDocuments();
+        // await loadMyDocuments();
+        // await populateUseDocuments();
+        setLoading(false);
         //TODO: set loading state to be false here
       }
     } catch (error) {
+      setLoading(false);
+
       console.error(error);
     }
   };
@@ -137,11 +158,17 @@ const UserDocuments = () => {
   //   }
   //   return e?.fileList;
   // };
-
+  const contactHandler = async () => {
+    const isConnected = await fetchWalletInfo();
+    if (isConnected) {
+      const contracts = await getUserContracts();
+      setUserUploadedDocuments(contracts);
+      // console.log(contracts);
+    }
+  };
   useEffect(() => {
-    console.log(uplodedDocument);
-  }, [uplodedDocument]);
-
+    console.log(userDocuments);
+  }, [userDocuments]);
   return (
     <div css={styles.userDocuments}>
       <div css={styles.heading}>
@@ -180,7 +207,7 @@ const UserDocuments = () => {
                   "Actions",
                 ]}
                 alignCellItems="center"
-                data={[]}
+                data={userDocuments ? populateUseDocuments() : []}
                 maxPages={3}
                 onPageNumberChanged={function noRefCheck() {}}
                 onRowClick={function noRefCheck() {}}
@@ -203,7 +230,10 @@ const UserDocuments = () => {
           console.log(value);
         }}
       />
-      ;
+      <Button type="primary" typeAttribute="submit" onClick={contactHandler}>
+        Get contracts
+      </Button>
+
       <Drawer
         open={openDrawer}
         width={"30%"}
@@ -211,66 +241,67 @@ const UserDocuments = () => {
           setOpenDrawer(false);
         }}
       >
-        <Form
-          name="basic"
-          labelCol={{ span: 8 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          layout="vertical"
-        >
-          <Form.Item
-            label="Name"
-            name="Name"
-            rules={[{ required: true, message: "Please input your Name!" }]}
+        <Spin spinning={loading}>
+          <Form
+            name="basic"
+            labelCol={{ span: 8 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            layout="vertical"
           >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Email"
-            name="Email"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Email!",
-                type: "email",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="DateRange" label="Contract Validity Date">
-            <DatePicker.RangePicker />
-          </Form.Item>
-          <Form.Item label="Type" name="Type">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Category" name="Category">
-            <Input />
-          </Form.Item>
-          <Form.Item name="Description" label="Description">
-            <Input.TextArea rows={4} />
-          </Form.Item>
-          <Form.Item name="UploadedFile" label="Dragger">
-            <Upload
-              listType="picture-card"
-              onChange={(file) => {
-                console.log(file);
-                setUploadedDocument(file.fileList);
-              }}
+            <Form.Item
+              label="Name"
+              name="Name"
+              rules={[{ required: true, message: "Please input your Name!" }]}
             >
-              <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="" onClick={() => {}}>
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Email"
+              name="Email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Email!",
+                  type: "email",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="DateRange" label="Contract Validity Date">
+              <DatePicker.RangePicker />
+            </Form.Item>
+            <Form.Item label="Type" name="Type">
+              <Input />
+            </Form.Item>
+            <Form.Item label="Category" name="Category">
+              <Input />
+            </Form.Item>
+            <Form.Item name="Description" label="Description">
+              <Input.TextArea rows={4} />
+            </Form.Item>
+            <Form.Item name="UploadedFile" label="Dragger">
+              <Upload
+                acceptedFiles="image/jpeg"
+                descriptionText="Only .jpeg files are accepted"
+                onChange={(file) => {
+                  setUploadedDocument(file);
+                }}
+                theme="withIcon"
+              />
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" typeAttribute="submit" onClick={() => {}}>
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
       </Drawer>
     </div>
   );
