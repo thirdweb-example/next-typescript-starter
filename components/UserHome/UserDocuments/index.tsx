@@ -8,11 +8,12 @@ import {
   Tabs,
   Button as AntButton,
   Spin,
+  Typography,
+  message,
 } from "antd";
 import { toast } from "react-toastify";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { colors, mixins, typography } from "../../../styles1";
-// import Button from "../../shared/Button";
 import { NFTStorage, File } from "nft.storage";
 import * as styles from "./styles";
 import { NFT_TOKEN } from "../../../constants/constants";
@@ -23,6 +24,7 @@ import { contractContext } from "./../Contract";
 import Button from "../../shared/Button";
 
 const UserDocuments = () => {
+  const [connected, setConnected] = useState<boolean>(false); // to be made into global state
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [uplodedDocument, setUploadedDocument] = useState<any>();
   const [userDocuments, setUserUploadedDocuments] = useState<any>();
@@ -30,6 +32,26 @@ const UserDocuments = () => {
   const { addContract, getUserContracts, fetchWalletInfo } = useContext(
     contractContext
   ) as ContractContextType;
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const connectToWallet = async () => {
+    const isConnected = await fetchWalletInfo();
+    setConnected(isConnected as boolean);
+  };
+  useEffect(() => {
+    connectToWallet();
+  });
+
+  const contactHandler = useCallback(async () => {
+    const contracts = await getUserContracts();
+    setUserUploadedDocuments(contracts);
+  }, [getUserContracts]);
+
+  useEffect(() => {
+    if (connected) {
+      contactHandler();
+    }
+  }, [connected, contactHandler]);
 
   // useEffect(() => {
   //   // fetchWalletInfo();
@@ -83,8 +105,6 @@ const UserDocuments = () => {
     return data;
   };
 
-  // fetchWalletInfo();
-
   const onFinish = (values: any) => {
     console.log("Details Submitted For Upload:", values);
     setLoading(true);
@@ -95,15 +115,16 @@ const UserDocuments = () => {
     console.log("Failed:", errorInfo);
   };
 
-   async function getImageUrlFromMetaData(IPFSUri: string) {
-     IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
-     const response = await fetch(IPFSUri);
-     const responseJSON = await response.json();
-     return responseJSON["image"];
-   }
+  async function getImageUrlFromMetaData(IPFSUri: string) {
+    IPFSUri = IPFSUri.replace("ipfs://", "https://w3s.link/ipfs/");
+    const response = await fetch(IPFSUri);
+    const responseJSON = await response.json();
+    return responseJSON["image"];
+  }
 
   const uploadDocToIPFS = async (values: any) => {
     try {
+      messageApi.info("Uploading");
       console.log("NFT TOKEN IS:", NFT_TOKEN);
       if (NFT_TOKEN) {
         //TODO : set loading state to be true here
@@ -125,7 +146,7 @@ const UserDocuments = () => {
         const sha256 = await blobToSHA256(uplodedDocument);
         console.log("SHA256 of File :=> ", sha256);
         const currentTime = new Date();
-        const imageUrl = await getImageUrlFromMetaData(metadata.url)
+        // const imageUrl = await getImageUrlFromMetaData(metadata.url)
         await addContract(
           values.Category || "",
           values.Type || "",
@@ -136,17 +157,19 @@ const UserDocuments = () => {
           values.DateRange[1]["$d"].toLocaleString() || "",
           currentTime.toLocaleString(),
           sha256,
-          imageUrl
+          metadata.url
         );
 
         // await loadMyDocuments();
         // await populateUseDocuments();
         setLoading(false);
         //TODO: set loading state to be false here
+        messageApi.success("Uploaded Successfully ");
+        message.info("List will be updated in a few minutes");
       }
     } catch (error) {
       setLoading(false);
-
+      messageApi.error("Uploaded Successfully ");
       console.error(error);
     }
   };
@@ -158,19 +181,13 @@ const UserDocuments = () => {
   //   }
   //   return e?.fileList;
   // };
-  const contactHandler = async () => {
-    const isConnected = await fetchWalletInfo();
-    if (isConnected) {
-      const contracts = await getUserContracts();
-      setUserUploadedDocuments(contracts);
-      // console.log(contracts);
-    }
-  };
+
   useEffect(() => {
     console.log(userDocuments);
   }, [userDocuments]);
   return (
     <div css={styles.userDocuments}>
+      {contextHolder}
       <div css={styles.heading}>
         <p css={{ ...typography.H5_20_bold, color: colors.Zeb_Solid_Dark }}>
           Your Documents
@@ -196,7 +213,7 @@ const UserDocuments = () => {
                 tableBackgroundColor="#F5F5F5"
                 customTableBorder="border-top:1px"
                 headerBgColor="#FFFFFF"
-                columnsConfig="50px  2fr 1fr 1fr 1fr 1fr 1fr"
+                columnsConfig="50px  1fr 2fr 1fr 2fr 2fr 1fr"
                 header={[
                   "Sr.",
                   "Type",
@@ -230,9 +247,6 @@ const UserDocuments = () => {
           console.log(value);
         }}
       />
-      <Button type="primary" typeAttribute="submit" onClick={contactHandler}>
-        Get contracts
-      </Button>
 
       <Drawer
         open={openDrawer}
@@ -242,6 +256,13 @@ const UserDocuments = () => {
         }}
       >
         <Spin spinning={loading}>
+          <div css={mixins.textAlignmentCenter}>
+            <UploadOutlined
+              css={{ fontSize: "40px", color: colors.Zeb_Solid_Midnight }}
+            />
+            <Typography.Title level={3}>Upload Document</Typography.Title>
+          </div>
+
           <Form
             name="basic"
             labelCol={{ span: 8 }}
@@ -296,6 +317,15 @@ const UserDocuments = () => {
               />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button
+                type="secondary"
+                typeAttribute="submit"
+                onClick={() => {
+                  setOpenDrawer(false);
+                }}
+              >
+                Cancel
+              </Button>
               <Button type="primary" typeAttribute="submit" onClick={() => {}}>
                 Submit
               </Button>

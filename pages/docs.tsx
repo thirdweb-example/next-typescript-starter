@@ -8,7 +8,7 @@ import SideBar from "../components/SideBar";
 import UserHome from "../components/UserHome";
 
 const Home: NextPage = () => {
-    const [showKycFlow,setShowKycFlow]=useState<boolean>(false);
+  const [showKycFlow,setShowKycFlow]=useState<boolean>(false);
   const [openSideDrawer, setOpenSideDrawer] = useState<boolean>(false);
 
     useEffect(()=>{

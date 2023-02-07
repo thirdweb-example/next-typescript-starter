@@ -1,5 +1,5 @@
 import { ThunkDispatch } from "redux-thunk";
-import { StoreState as State } from "@reducers/index";
+import { StoreState as State } from "../../reducers/index";
 
 export interface Action {
   type: string;

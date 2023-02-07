@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { colors, mixins } from "../../../styles1";
 
 export const userDocuments = css({
-  width: "80%",
+  width: "100%",
   border: `0.5px solid ${colors.Zeb_Border_Grey}`,
   borderRadius: "30px",
   height: "85vh",

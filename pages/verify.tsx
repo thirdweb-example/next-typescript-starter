@@ -1,6 +1,4 @@
 /** @jsxImportSource @emotion/react */
-
-/** @jsxImportSource @emotion/react */
 import {Upload } from "@web3uikit/core";
 import {Form,Button as AntButton, Badge, Drawer} from "antd";
 import type { NextPage } from "next";
@@ -22,20 +20,20 @@ const Verify: NextPage = () => {
   const [uplodedDocument, setUploadedDocument] = useState<any>();
   const [docsFound, setDocsFound] = useState();
   const [showState, setShowState] = useState(false);
-  console.log(docsFound);
+
 
   const { getContract , fetchWalletInfo } = useContext(
     contractContext
   ) as ContractContextType;
 
   const onFinish = (values: any) => {
-    console.log("Details Submitted For Upload:", values);
+    // console.log("Details Submitted For Upload:", values);
     verifyDoc(values);
   };
 
  const verifyDoc = async (values: any) => {
   const sha256 = await blobToSHA256(uplodedDocument);
-  console.log("SHA256 of File :=> ", sha256);
+//   console.log("SHA256 of File :=> ", sha256);
   const docDetails = await getContract(sha256);
    if (docDetails) {
      setShowState(true);
@@ -44,7 +42,7 @@ const Verify: NextPage = () => {
  }
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    // console.log("Failed:", errorInfo);
   };
 
     useEffect(()=>{
