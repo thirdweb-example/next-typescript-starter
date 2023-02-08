@@ -22,7 +22,7 @@ export const topBar = css({
 })
 
 export const subHeading = css({
-  textDecoration: "underline",
+  textDecoration: "none",
   cursor: "pointer"
 })
 

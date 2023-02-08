@@ -60,7 +60,7 @@ const Header = () => {
   return (
     <div css={styles.header}>
       <div css={styles.topBar}>
-        <div css={styles.webName(pathName)}>WEB3-DOCS</div>
+        <div css={styles.webName(pathName)}>Verified Document Storage</div>
         {router.pathname === "/" ? (
           <>
             <div
