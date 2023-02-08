@@ -169,7 +169,7 @@ const UserDocuments = () => {
       }
     } catch (error) {
       setLoading(false);
-      messageApi.error("Uploaded Unsuccessfully ");
+      messageApi.error("Failed to Upload");
       console.error(error);
     }
   };
