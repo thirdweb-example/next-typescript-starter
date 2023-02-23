@@ -21,6 +21,8 @@ function generateStyle(type: ButtonType, size: ButtonSize) {
       }
       return styles.tabButton;
     }
+    case "blue":
+      return styles.blueButton;
     case "special":
       return [styles.specialButton, styles.specialButtonText];
   }

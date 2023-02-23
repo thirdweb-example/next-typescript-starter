@@ -148,3 +148,32 @@ export const tabButton = css({
 export const disabledButton = css({
   cursor: "not-allowed",
 });
+
+export const blueButton = css({
+  background: "#3878D9",
+  borderRadius: utils.remConverter(8),
+  boxShadow: "none",
+  border: "none",
+  outline: "none",
+  whiteSpace: "nowrap",
+  ...typography.C4_12,
+  "&.small": {
+    padding: `${utils.remConverter(8)} ${utils.remConverter(12)}`,
+    ...typography.C4_12,
+  },
+  "&.medium": {
+    padding: `${utils.remConverter(8)} ${utils.remConverter(12)}`,
+    ...typography.C4_12,
+  },
+  "&.large": {
+    padding: `${utils.remConverter(8)} ${utils.remConverter(16)}`,
+    ...typography.C2_16,
+  },
+  "&.full-width": {
+    padding: `${utils.remConverter(8)} 0`,
+    width: "100%",
+  },
+  "&:disabled": {
+    background: "#d3d3d3",
+  },
+})

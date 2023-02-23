@@ -2,7 +2,6 @@
 import * as styles from "./styles";
 import { useCallback, useEffect, useState } from "react";
 import {
-  Button,
   DatePicker,
   Form,
   Input,
@@ -10,26 +9,68 @@ import {
   Steps,
   Typography,
 } from "antd";
+import Button from "../shared/Button";
 import { colors, mixins } from "../../styles1";
+import UploadAadhar from "./UploadAadhar";
+import AddSelfie from "./AddSelfie";
 
 export enum KycPage {
   KycForm,
   UploadDocuments,
   VerificationResult,
 }
+
+export interface Aadhar {
+  front: FileList;
+  back: FileList;
+}
+export interface KycDetails {
+  firstName: string;
+  lastName: string;
+  dob: string;
+  gender: string;
+  aadhaarNumber: string;
+  selfieURL: string;
+  createDate: string;
+}
+
 const KycHome: React.FC = () => {
   const [kycPage, setKycPage] = useState<KycPage>(KycPage.KycForm);
   const [step, setStep] = useState<number>(0);
+  const [selfie, setSelfie] = useState("");
   const description = "This is a description.";
+  const [aadhar, setAadhar] = useState<Aadhar>({ front: {} as FileList, back: {} as FileList });
+  const [kycDetails, setKycDetails] = useState<KycDetails>({
+    firstName: "",
+    lastName: "",
+    dob: "",
+    gender: "",
+    aadhaarNumber: "",
+    selfieURL: "",
+    createDate: ""
+  });
 
-  const onFinish = (values: any) => {
+  const onFormSubmit = (values: any) => {
     console.log(values);
-    console.log("Success:", values);
+    console.log("Success:", values.firstName);
+    setKycDetails({
+      ...kycDetails,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      dob: values.dob["$d"].toLocaleString(),
+      gender: values.gender,
+      aadhaarNumber: values.aadhaarNumber
+    });
+    setStep(step + 1);
   };
+
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+  const goBack = () => {
+    setStep(step ? step - 1 : 0);
+  }
 
   const stepperContent = useCallback(() => {
     switch (step) {
@@ -45,50 +86,58 @@ const KycHome: React.FC = () => {
             <Form
               name="basic"
               initialValues={{ remember: true }}
-              onFinish={onFinish}
+              onFinish={onFormSubmit}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
               layout="vertical"
               size="large"
             >
-              <div css={{ width: "70%" }}>
+              <div css={{ width: "100%" }}>
                 <div css={mixins.flexJustifiedBetween}>
                   <Form.Item
                     label="First Name"
-                    name="First Name"
+                    name="firstName"
                     required
-                    css={{ width: "47%" }}
+                    css={{ width: "33%" }}
                   >
-                    <Input />
+                    <Input placeholder="Enter First Name" />
                   </Form.Item>
                   <Form.Item
                     label="Last Name"
-                    name="Last Name"
-                    css={{ width: "47%" }}
+                    name="lastName"
+                    css={{ width: "40%" }}
                     required
                   >
-                    <Input />
+                    <Input placeholder="Enter Last Name" />
                   </Form.Item>
-                </div>
-                <div css={mixins.flexJustifiedBetween}>
                   <Form.Item
-                    name="Gender"
+                    name="gender"
                     label="Gender"
                     required
-                    css={{ width: "35%" }}
+                    css={{ width: "25%" }}
                   >
-                    <Select>
+                    <Select placeholder="Gender">
                       <Select.Option value="Male">Male</Select.Option>
                       <Select.Option value="Female">Female</Select.Option>
                     </Select>
                   </Form.Item>
+                </div>
+                <div css={mixins.flexJustifiedBetween}>
                   <Form.Item
-                    name="Date of Birth"
+                    name="dob"
                     label="Date of Birth"
+                    required
+                    css={{ width: "35%" }}
+                  >
+                    <DatePicker placeholder="Choose Date" css={{ width: "100%" }} />
+                  </Form.Item>
+                  <Form.Item
+                    name="aadhaarNumber"
+                    label="Aadhaar Number"
                     required
                     css={{ width: "62%" }}
                   >
-                    <DatePicker css={{ width: "100%" }} />
+                    <Input type="number" placeholder="Enter Aadhar Number" />
                   </Form.Item>
                 </div>
               </div>
@@ -99,30 +148,23 @@ const KycHome: React.FC = () => {
                   textAlign: "center",
                 }}
               >
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    setStep((prev) => prev + 1);
-                  }}
-                >
-                  Submit
-                </Button>
+                <Button type="blue" onClick={()=>{}} typeAttribute="submit">Next</Button>
               </Form.Item>
             </Form>
           </div>
         );
         break;
       case 1:
-        return <div>TBD</div>;
+        return <UploadAadhar step={step} setStep={setStep} aadhar={aadhar} setAadhar={setAadhar} />;
         break;
       case 2:
-        return <div>TBD</div>;
+        return <AddSelfie step={step} setStep={setStep} selfie={selfie} setSelfie={setSelfie} />;
         break;
       case 3:
         return <div>DONE</div>;
         break;
     }
-  }, [step]);
+  }, [step, aadhar, selfie]);
   return (
     <div css={styles.addKyc}>
       <Typography.Title level={4}>Add KYC</Typography.Title>
