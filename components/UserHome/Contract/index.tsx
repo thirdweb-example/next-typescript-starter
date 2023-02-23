@@ -70,6 +70,32 @@ export const ContractHandler: React.FC<Props> = ({ children }) => {
     );
   }
 
+  async function addUserKycInfo(
+    firstName: string,
+    lastName: string,
+    gender: string,
+    dob: string,
+    aadhaarNumber: string,
+    aadhaarFrontURL: string,
+    aadhaarBackURL: string,
+    selfieURL: string,
+    createDate: string,
+  ) {
+    const contract = await checkAndConnectContract();
+    await contract.addUserKycInfo(
+      firstName,
+      lastName,
+      gender,
+      dob,
+      aadhaarNumber,
+      aadhaarFrontURL,
+      aadhaarBackURL,
+      createDate,
+      selfieURL,
+      createDate
+    );
+  }
+
   async function getContract(sha256: string) {
     const contract = await checkAndConnectContract();
     const result = await contract.getContract(sha256);
@@ -91,6 +117,16 @@ export const ContractHandler: React.FC<Props> = ({ children }) => {
       }
       return result;
     } else {
+      console.log("wallet not connnected");
+    }
+  }
+
+  async function getUserKycInfo() {
+    if (userAddress) {
+    const contract = await checkAndConnectContract();
+    const result = await contract.getUserKycInfo(userAddress);
+    return result;
+    }else {
       console.log("wallet not connnected");
     }
   }
