@@ -21,7 +21,17 @@ contract CreateContract is Ownable {
       string CreateDate;
       string IPFSURI;
   }
-
+  struct userKycInfo { 
+      string FirstName;
+      string LastName;
+      string DOB;
+      string Gender;
+      string AadhaarNumber;
+      string AadhaarFrontURL;
+      string AadhaarBackURL;
+      string SelfieURL;
+      string CreateDate;
+  }
 
   uint256 public ContractCreatePrice = 0.001 ether;
 
@@ -30,6 +40,7 @@ contract CreateContract is Ownable {
   mapping(address => string[]) public ContractCreatorMap;  
   mapping(address => uint256) internal OrgOwners;
   mapping(string => uint256) internal DailyContractCount;
+  mapping(address => userKycInfo) public userKycMap;
   bool public isContractPaused = false;
 
 
@@ -113,6 +124,24 @@ contract CreateContract is Ownable {
     require(os);
   }
 
+  function addUserKycInfo(string memory _firstName,
+                      string memory _lastName,
+                      string memory _gender,
+                      string memory _dob,
+                      string memory _aadhaarNumber,
+                      string memory _aadhaarFrontURL,
+                      string memory _aadhaarBackURL,
+                      string memory _selfieURL,
+                      string memory _createDate) public {
+
+    //Condition to check if this address already has some kycInfo
+
+    userKycMap[msg.sender] = userKycInfo(_firstName, _lastName, _gender, _dob, _aadhaarNumber, _aadhaarFrontURL, _aadhaarBackURL, _selfieURL, _createDate);
+  }
+
+  function getUserKycInfo(address _add) public view returns(userKycInfo memory){
+    return userKycMap[_add];
+  }
  
   fallback() external  {
   }

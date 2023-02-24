@@ -1,5 +1,129 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_category",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_type",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_desc",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_st_date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_end_date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_createdate",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_SHA256",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_IPFSURI",
+				"type": "string"
+			}
+		],
+		"name": "addContract",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_orgOwner",
+				"type": "address"
+			}
+		],
+		"name": "addOrgOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_firstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_lastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_dob",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_aadhaarNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_aadhaarFrontURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_aadhaarBackURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_selfieURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_createDate",
+				"type": "string"
+			}
+		],
+		"name": "addUserKycInfo",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -24,8 +148,61 @@
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "_pauseState",
+				"type": "bool"
+			}
+		],
+		"name": "setContractState",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			}
+		],
+		"name": "setPrice",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"stateMutability": "nonpayable",
 		"type": "fallback"
+	},
+	{
+		"inputs": [],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -121,77 +298,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_category",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_type",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_desc",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_email",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_st_date",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_end_date",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_createdate",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_SHA256",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_IPFSURI",
-				"type": "string"
-			}
-		],
-		"name": "addContract",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_orgOwner",
-				"type": "address"
-			}
-		],
-		"name": "addOrgOwner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -383,6 +489,72 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_add",
+				"type": "address"
+			}
+		],
+		"name": "getUserKycInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "FirstName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "LastName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "DOB",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "Gender",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "AadhaarNumber",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "AadhaarFrontURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "AadhaarBackURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "SelfieURL",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "CreateDate",
+						"type": "string"
+					}
+				],
+				"internalType": "struct CreateContract.userKycInfo",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "isContractPaused",
 		"outputs": [
@@ -428,56 +600,62 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bool",
-				"name": "_pauseState",
-				"type": "bool"
-			}
-		],
-		"name": "setContractState",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			}
-		],
-		"name": "setPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "newOwner",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "userKycMap",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "FirstName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "LastName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "DOB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "Gender",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "AadhaarNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "AadhaarFrontURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "AadhaarBackURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "SelfieURL",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "CreateDate",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]
