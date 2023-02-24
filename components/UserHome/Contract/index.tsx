@@ -133,7 +133,7 @@ export const ContractHandler: React.FC<Props> = ({ children }) => {
 
   return (
     <contractContext.Provider
-      value={{ addContract, getContract, fetchWalletInfo, getUserContracts }}
+      value={{ addContract, getContract, fetchWalletInfo, getUserContracts, addUserKycInfo, getUserKycInfo }}
     >
       {children}
     </contractContext.Provider>

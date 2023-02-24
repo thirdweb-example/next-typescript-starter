@@ -17,9 +17,10 @@ interface AddSelfieProps {
   setStep: (step: number) => void;
   selfie: string;
   setSelfie: React.Dispatch<React.SetStateAction<string>>;
+  onSubmit: () => void;
 }
 
-const AddSelfie: React.FC<AddSelfieProps> = ({step, setStep, selfie, setSelfie}) => {
+const AddSelfie: React.FC<AddSelfieProps> = ({step, setStep, selfie, setSelfie, onSubmit}) => {
   const [allowed, setAllowed] = useState(false);
   const webcamRef = useRef(null);
   const capture = useCallback(
@@ -104,7 +105,9 @@ const AddSelfie: React.FC<AddSelfieProps> = ({step, setStep, selfie, setSelfie})
       </div>
       <div css={styles.buttonContainer}>
       <Button style={styles.backButton} type="tertiary" onClick={() => setStep(step-1)}>Back</Button>
-      <Button type="blue" onClick={() => setStep(step+1)} disabled={selfie.length===0}>Submit</Button>
+      <Button type="blue" onClick={() => {
+        onSubmit();
+      }} disabled={selfie.length===0}>Submit</Button>
     </div>
   </div>;
 }

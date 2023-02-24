@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as styles from "./styles";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   DatePicker,
   Form,
@@ -13,6 +13,8 @@ import Button from "../shared/Button";
 import { colors, mixins } from "../../styles1";
 import UploadAadhar from "./UploadAadhar";
 import AddSelfie from "./AddSelfie";
+import { ContractContextType } from "./../UserHome/Contract/context";
+import { contractContext } from "./../UserHome/Contract";
 
 export enum KycPage {
   KycForm,
@@ -40,6 +42,9 @@ const KycHome: React.FC = () => {
   const [selfie, setSelfie] = useState("");
   const description = "This is a description.";
   const [aadhar, setAadhar] = useState<Aadhar>({ front: {} as FileList, back: {} as FileList });
+    const { addUserKycInfo, getUserKycInfo } = useContext(
+    contractContext
+  ) as ContractContextType;
   const [kycDetails, setKycDetails] = useState<KycDetails>({
     firstName: "",
     lastName: "",
@@ -64,6 +69,17 @@ const KycHome: React.FC = () => {
     setStep(step + 1);
   };
 
+  const onKYCDetailsSubmit = async() => {
+    await addUserKycInfo(kycDetails.firstName,
+      kycDetails.lastName,
+      kycDetails.gender,
+      kycDetails.dob,
+      kycDetails.aadhaarNumber,
+      "FRONTURL",
+      "BACKURL",
+      "SELFIEURL",
+      kycDetails.createDate);
+  }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -158,7 +174,7 @@ const KycHome: React.FC = () => {
         return <UploadAadhar step={step} setStep={setStep} aadhar={aadhar} setAadhar={setAadhar} />;
         break;
       case 2:
-        return <AddSelfie step={step} setStep={setStep} selfie={selfie} setSelfie={setSelfie} />;
+        return <AddSelfie step={step} setStep={setStep} selfie={selfie} setSelfie={setSelfie} onSubmit={onKYCDetailsSubmit} />;
         break;
       case 3:
         return <div>DONE</div>;
