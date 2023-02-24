@@ -90,7 +90,6 @@ export const ContractHandler: React.FC<Props> = ({ children }) => {
       aadhaarNumber,
       aadhaarFrontURL,
       aadhaarBackURL,
-      createDate,
       selfieURL,
       createDate
     );
