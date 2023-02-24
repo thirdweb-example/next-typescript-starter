@@ -10,7 +10,8 @@ export type ButtonType =
   | "secondary"
   | "special"
   | "tertiary"
-  | "tab";
+  | "tab"
+  | "blue";
 
 export interface ButtonProps {
   type: ButtonType;

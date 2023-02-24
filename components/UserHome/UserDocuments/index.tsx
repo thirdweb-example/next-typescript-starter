@@ -308,7 +308,6 @@ const UserDocuments = () => {
             </Form.Item>
             <Form.Item name="UploadedFile" label="Dragger">
               <Upload
-                acceptedFiles="image/jpeg"
                 descriptionText="Only .jpeg files are accepted"
                 onChange={(file) => {
                   setUploadedDocument(file);
