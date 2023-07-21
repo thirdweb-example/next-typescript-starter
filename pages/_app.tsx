@@ -9,7 +9,10 @@ const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider activeChain={activeChain}>
+    <ThirdwebProvider
+      clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
+      activeChain={activeChain}
+    >
       <Component {...pageProps} />
     </ThirdwebProvider>
   );
