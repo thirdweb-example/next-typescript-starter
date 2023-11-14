@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ThirdwebProvider, embeddedWallet } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 
 // This is the chain your dApp will work on.
@@ -7,11 +7,20 @@ import "../styles/globals.css";
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
 const activeChain = "ethereum";
 
+console.log("clientid", process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID);
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
       activeChain={activeChain}
+      supportedWallets={[
+        embeddedWallet({
+          auth: {
+            options: ["apple", "email", "facebook", "google"],
+          },
+        }),
+      ]}
     >
       <Component {...pageProps} />
     </ThirdwebProvider>
