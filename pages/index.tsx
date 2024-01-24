@@ -28,12 +28,7 @@ const Home: NextPage = () => {
           </p>
 
           <div className={styles.connect}>
-            <ConnectWallet
-              dropdownPosition={{
-                side: "bottom",
-                align: "center",
-              }}
-            />
+            <ConnectWallet />
           </div>
         </div>
 
