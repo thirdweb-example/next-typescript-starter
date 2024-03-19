@@ -11,12 +11,18 @@
     "deploy": "next build && next export && npx thirdweb@latest upload out"
   },
   "dependencies": {
-    "@thirdweb-dev/react": "^4",
-    "@thirdweb-dev/sdk": "^4",
+    "@thirdweb-dev/auth": "4.1.27",
+    "@thirdweb-dev/react": "4.4.2",
+    "@thirdweb-dev/sdk": "4.0.30",
     "ethers": "^5",
     "next": "^13",
     "react": "^18.2",
     "react-dom": "^18.2"
+  },
+  "broken-start": {
+    "@thirdweb-dev/auth": "4.1.28-nightly-3ba15366-20240131235327",
+    "@thirdweb-dev/react": "4.4.3-nightly-3ba15366-20240131235327",
+    "@thirdweb-dev/sdk": "4.0.31-nightly-3ba15366-20240131235327"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",
