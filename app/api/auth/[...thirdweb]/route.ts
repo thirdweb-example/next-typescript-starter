@@ -1,5 +1,9 @@
-import { ThirdwebAuthAppRouter } from "@thirdweb-dev/auth/next";
+import {
+  ThirdwebAuthAppRouter,
+  type ThirdwebNextContext,
+} from "@thirdweb-dev/auth/next";
 import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";
+import type { NextRequest } from "next/server";
 
 const { ThirdwebAuthHandler } = ThirdwebAuthAppRouter({
   domain: "example.com",
